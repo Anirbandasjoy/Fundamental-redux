@@ -104,5 +104,5 @@ store.subscribe(()=>{
 });
 
 store.dispatch(addCart("gray"))
-store.dispatch(addProduct("nodus" , "fish","egge"))
+store.dispatch(addProduct("nodus" , "fish","egge","law"))
 
