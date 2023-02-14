@@ -15,9 +15,7 @@ const initialCounter = {
 const initialUser = {
     count : 1,
     users : [
-        {
-            user : "Anirban das joy",
-        }
+      "Anirban das joy"
     ]
 }
 
@@ -86,6 +84,12 @@ store.subscribe(() =>{
 });
 
 store.dispatch(addUsers("joy das"))
+store.dispatch(addUsers("sajib"))
+store.dispatch(addUsers("sajib"))
+store.dispatch(addUsers("sajib"))
+store.dispatch(addUsers("sajib"))
+store.dispatch(addUsers("sajib"))
+store.dispatch(addUsers("sajib"))
 store.dispatch(addUsers("sajib"))
 
 
