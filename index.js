@@ -5,11 +5,20 @@ const {createStore} = require("redux");
 const INCREMENT = "INCREMENT";
 const DECREMENT = "DECREMENT";
 const RESET = "RESET";
+const ADD_USER = "ADD-USER";
 
 //STATE DEFAIND 
 
 const initialCounter = {
     count : 0,
+}
+const initialUser = {
+    count : 1,
+    users : [
+        {
+            user : "Anirban das joy",
+        }
+    ]
 }
 
 // ACTION DEFAIND 
@@ -30,10 +39,17 @@ const resetCounter = () => {
         type :RESET,
     }
 };
+const addUsers = (user) =>{
+    return{
+        type : ADD_USER,
+        payload : user,
+    }
+}
+
 
 // CREATING REDUSER 
 
-const counterReduser = (state=initialCounter,action) => {
+const counterReduser = (state=initialUser,action) => {
     switch(action.type){
         case INCREMENT :
             return{
@@ -50,6 +66,12 @@ const counterReduser = (state=initialCounter,action) => {
                 ...state,
                 count : 0,
             }
+        case ADD_USER : 
+            return{
+                users : [...state.users,action.payload],
+                count : state.count + 1,
+            }
+        
         default : 
             return state;
     }
@@ -63,14 +85,9 @@ store.subscribe(() =>{
     console.log(store.getState());
 });
 
-store.dispatch(IncremntCounter());
-store.dispatch(IncremntCounter());
-store.dispatch(IncremntCounter());
-store.dispatch(IncremntCounter());
-store.dispatch(IncremntCounter());
-store.dispatch(IncremntCounter());
-store.dispatch(decrimentCounter());
-store.dispatch(resetCounter());
+store.dispatch(addUsers("joy das"))
+store.dispatch(addUsers("sajib"))
+
 
 
 
