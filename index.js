@@ -1,64 +1,77 @@
 const {createStore} = require("redux");
 
-// defaind  ----->>>
+//CONSTANT DEFAND
 
-const INCTEMENT = "INCREMENT";
-const DECTEMENT = "DECREMENT";
+const INCREMENT = "INCREMENT";
+const DECREMENT = "DECREMENT";
+const RESET = "RESET";
 
-// state defaind --
+//STATE DEFAIND 
 
-const initialCounterState = {
+const initialCounter = {
     count : 0,
-};
+}
 
-//action ---  object ..type and Payload (type must takbe)
+// ACTION DEFAIND 
 
-const incremntCounter = () => {
-    return {
-            type : INCTEMENT,
-          }
-};
-const decrementCounter = () => {
-    return {
-            type : DECTEMENT,
-    }
-};
-
-//create reducer    state and action---
-
-const createReducer = (state = initialCounterState , action) => {
-    switch(action.type){
-        
-        case  INCTEMENT : 
-          return{
-            ...state,
-            count : state.count + 1,
-          };
-        case DECTEMENT : 
+const IncremntCounter = () => {
         return{
-            ...state,
-            count : state.count - 1,
-          };
+            type : INCREMENT,
+        }
+};
 
-        default :
-          return state;
-
+const decrimentCounter = () => {
+        return{
+            type : DECREMENT,
+        }
+};
+const resetCounter = () => {
+    return{
+        type :RESET,
     }
 };
 
-// store create   mathod   getState()   subscribe()  dispatch()
+// CREATING REDUSER 
 
-const store = createStore(createReducer);
+const counterReduser = (state=initialCounter,action) => {
+    switch(action.type){
+        case INCREMENT :
+            return{
+                ...state,
+                count : state.count + 1
+            }
+        case DECREMENT :
+            return{
+                ...state,
+                count : state.count - 1
+            }
+        case RESET : 
+            return{
+                ...state,
+                count : 0,
+            }
+        default : 
+            return state;
+    }
+};
+
+// CREATE STORE 
+
+const store = createStore(counterReduser);
+
 store.subscribe(() =>{
-    console.log(store.getState())
+    console.log(store.getState());
 });
 
-//action despatch ---
+store.dispatch(IncremntCounter());
+store.dispatch(IncremntCounter());
+store.dispatch(IncremntCounter());
+store.dispatch(IncremntCounter());
+store.dispatch(IncremntCounter());
+store.dispatch(IncremntCounter());
+store.dispatch(decrimentCounter());
+store.dispatch(resetCounter());
 
-store.dispatch(incremntCounter())
-store.dispatch(incremntCounter())
-store.dispatch(incremntCounter())
-store.dispatch(incremntCounter())
-store.dispatch(decrementCounter())
+
 
 
