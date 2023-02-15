@@ -1,39 +1,24 @@
-const {createStore, combineReducers} = require("redux")
+const {createStore,applyMiddleware} = require("redux");
+const { default: logger } = require("redux-logger");
 
-// CONSTANT DEFAIND 
+//CONSTANT DEFAIND
+const GET_PRODUCTS = "GET_PRODUCTS";
+const ADD_PRODUCT = "ADD_PRODUCT";
 
-//PRODUCT CONSTENT
-const GET_PRODUCTS = "GET_PRODUCT";
-const ADD_PRODUCT = "ADD_PRODUCT"
-
-//CARD CONSTENT 
-const  GET_CART_ITEMS = "GET_CART_ITEMS";
-const ADD_CARDT_ITEM = "ADD_CART_ITEM";
-
-
-//  STATE DEFAIND 
-
-// PRODUCT STATE DEFAIND
-const intialProducts = {
-    Products : ["sugoar" , " alu" , "sosa"],
-    count : 3,
+//STATE DEFAIND
+const initalProductstate = {
+    products : ["lobon","sugar"],
+    count : 2,
 };
 
-//CART STATE DEFAIND
-const initialCart = {
-    carts : ["blow cart" , "red cart", "white cart","black cart"],
-    count : 4,
-    
-}
+//ACTION DEFAIND
 
-// ACTION DEFAIND 
-
-//PRODUCT ACTION DEFAIND 
-const getProduct = () =>{
+const getProducts = () =>{
     return{
         type : GET_PRODUCTS
     }
-}
+};
+
 const addProduct = (product) =>{
     return{
         type : ADD_PRODUCT,
@@ -41,68 +26,28 @@ const addProduct = (product) =>{
     }
 }
 
-//CART ACTION DEFAIND
-const getCart = () =>{
-    return{
-        type : GET_CART_ITEMS,
-    }
-}
+// REDUSER DEFAIND
 
-const addCart = (cart) =>{
-    return{
-        type : ADD_CARDT_ITEM,
-        payload : cart,
-    }
-}
-
-// REDUSER DEFAIND 
-
-//PRODUCT REDUSER DEFAIND
-const ProductReducer = (state = intialProducts, action) => {
+const productReduser = (state = initalProductstate,action) =>{
     switch(action.type){
-      case GET_PRODUCTS :
-        return state;
-      case ADD_PRODUCT :
-        return{
-            Products : [...state.Products, action.payload],
-            count : state.count + 1,
-        };
-     default : 
-       return state;
-    }
-} ;
-
-// CART REUSER DEFAIND
-
-const cartReduser = (state = initialCart, action) =>{
-    switch(action.type){
-        case GET_CART_ITEMS :
+        case GET_PRODUCTS : 
             return state;
-        case ADD_CARDT_ITEM :
-            return {
-                carts : [...state.carts, action.payload],
+        case ADD_PRODUCT :
+            return{
+                products : [...state.products,action.payload],
                 count : state.count + 1
             }
         default :
             return state
     }
-       
 }
 
-//MULTIPOL REDUSER DEGLEAR
+// STORE DEFAIND
 
-const rootReduser = combineReducers({
-    ProductR : ProductReducer,
-     cartR : cartReduser
-})
+const store = createStore(productReduser,applyMiddleware(logger));
 
-// CREATE STORE 
-
-const store = createStore(rootReduser);
-store.subscribe(()=>{
+store.subscribe(() =>{
     console.log(store.getState())
 });
 
-store.dispatch(addCart("gray"))
-store.dispatch(addProduct("nodus" , "fish","egge","law"))
-
+store.dispatch(addProduct("fish"));
