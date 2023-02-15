@@ -1,53 +1,94 @@
+const { default: axios } = require("axios");
 const {createStore,applyMiddleware} = require("redux");
-const { default: logger } = require("redux-logger");
+const { default: thunk } = require("redux-thunk");
 
-//CONSTANT DEFAIND
-const GET_PRODUCTS = "GET_PRODUCTS";
-const ADD_PRODUCT = "ADD_PRODUCT";
 
-//STATE DEFAIND
-const initalProductstate = {
-    products : ["lobon","sugar"],
-    count : 2,
+//CONSTANT DEGAIND 
+const GET_TODOS_REQUEST = "GET_TODOS_REQUEST"
+const GET_TODOS_SUCCESS = "GET_TODOS_SUCCESS"
+const GET_TODO_FAILED = "GET_TODOS_FAILED"
+const API_URL = "https://jsonplaceholder.typicode.com/todos"
+
+//STATES DEFAIND
+const initalTodosState = {
+    todos : [],
+    isLoading : false,
+    error : null,
 };
 
 //ACTION DEFAIND
-
-const getProducts = () =>{
+const getTodorequest = () =>{
     return{
-        type : GET_PRODUCTS
+        type : GET_TODOS_REQUEST
+    }
+}
+const getTodosFailed = (error) =>{
+    return{
+        type : GET_TODO_FAILED,
+        payload : error,
+
     }
 };
 
-const addProduct = (product) =>{
+const getTodosSuccess = (todos) =>{
     return{
-        type : ADD_PRODUCT,
-        payload : product
+        type : GET_TODOS_SUCCESS,
+        payload : todos
     }
 }
 
-// REDUSER DEFAIND
+// REDUSER DEFAIND 
 
-const productReduser = (state = initalProductstate,action) =>{
+const todoReduser = (state = initalTodosState,action) =>{
     switch(action.type){
-        case GET_PRODUCTS : 
-            return state;
-        case ADD_PRODUCT :
-            return{
-                products : [...state.products,action.payload],
-                count : state.count + 1
-            }
+        case GET_TODOS_REQUEST :
+             return{
+                ...state,
+                isLoading : true
+             }
+        case GET_TODO_FAILED :
+             return{
+                ...state,
+                isLoading : false,
+                error : action.payload
+             }
+        case GET_TODOS_SUCCESS :
+             return{
+                isLoading : false,
+                todos : action.payload
+             }
         default :
-            return state
+             return state
     }
 }
 
-// STORE DEFAIND
+// ACTION CREATOR API CALLING
 
-const store = createStore(productReduser,applyMiddleware(logger));
+const fetchData = () =>{
+    return (dispatch) =>{
+        dispatch(getTodorequest());
+        axios.get(API_URL)
+        .then((res) =>{
+           const todos = res.data;
+           const id = todos.map((todo) => todo.id);
+           dispatch(getTodosSuccess(id));
+        })
+        .catch((err) =>{
+            const errorMessage = (err.message);
+            dispatch(getTodosFailed(errorMessage))
+        })
 
-store.subscribe(() =>{
+    }
+}
+
+// DEFAIND STORE 
+
+const store = createStore(todoReduser,applyMiddleware(thunk));
+
+store.subscribe(()=>{
     console.log(store.getState())
-});
+})
 
-store.dispatch(addProduct("fish"));
+//ACTION DISPATCH
+
+store.dispatch(fetchData());
